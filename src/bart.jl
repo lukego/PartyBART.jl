@@ -8,8 +8,9 @@ Base.copy(bart::BART) = BART(copy(bart.trees))
 function bart(X, y, n, M)
     # XXX standardize y
     posterior = []
-    bart = BART([Leaf(0.) for _ in 1:M])
-    for i in 1:n
+    Threads.@threads for i = 1:n
+        println(Threads.threadid())
+        bart = BART([Leaf(0.) for _ in 1:M])
         update!(X, y, bart)
         push!(posterior, copy(bart))
     end

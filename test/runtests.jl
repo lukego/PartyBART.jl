@@ -25,5 +25,5 @@ end
     end
     y = g.(Xhat)
     yhat = StatsBase.transform(fit(UnitRangeTransform, y), y)
-    bart = PartyBART.bart(Xhat, yhat, 5, 50)
+    bart = PartyBART.bart(Xhat, yhat, 10, 200)
 end

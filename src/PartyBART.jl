@@ -2,6 +2,7 @@ module PartyBART
 
 using Gen
 using GenParticleFilters
+using Distributed
 using Printf
 
 export bart, barts, predict_bart
