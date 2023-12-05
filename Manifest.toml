@@ -1,8 +1,8 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.3"
+julia_version = "1.9.2"
 manifest_format = "2.0"
-project_hash = "4466a54fa547fe62d428536805dc8feafc0d0fb8"
+project_hash = "a7faa350dd91574429fbc25c96a8d8b420cb6765"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -38,9 +38,9 @@ version = "0.3.0"
 
 [[deps.Compat]]
 deps = ["UUIDs"]
-git-tree-sha1 = "8a62af3e248a8c4bad6b32cbbe663ae02275e32c"
+git-tree-sha1 = "886826d76ea9e72b35fcd000e535588f7b60f21d"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "4.10.0"
+version = "4.10.1"
 weakdeps = ["Dates", "LinearAlgebra"]
 
     [deps.Compat.extensions]
@@ -116,9 +116,9 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra", "Random"]
-git-tree-sha1 = "28e4e9c4b7b162398ec8004bdabe9a90c78c122d"
+git-tree-sha1 = "01dba5dbad6b2766e2ddd7b9d64af0e6d68d95cd"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "1.8.0"
+version = "1.9.1"
 weakdeps = ["PDMats", "SparseArrays", "Statistics"]
 
     [deps.FillArrays.extensions]
@@ -154,10 +154,10 @@ uuid = "ea4f424c-a589-11e8-07c0-fd5c91b9da4a"
 version = "0.4.6"
 
 [[deps.GenParticleFilters]]
-deps = ["Distributions", "Gen", "Parameters", "Statistics"]
-git-tree-sha1 = "1009fe501115947ba57a9e9e90a3acd3e8d476bb"
+deps = ["Distributions", "Gen", "Parameters", "Statistics", "StatsBase"]
+git-tree-sha1 = "a25bc886181c5b08b8c75de729cb644e5a4d21bd"
 uuid = "56b76ac4-72ef-411e-b419-6d312ed86a6f"
-version = "0.1.8"
+version = "0.2.1"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "OpenLibm_jll", "SpecialFunctions"]
@@ -424,9 +424,9 @@ version = "1.7.0"
 
 [[deps.StatsBase]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "LogExpFunctions", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics", "StatsAPI"]
-git-tree-sha1 = "1d77abd07f617c4868c33d4f5b9e1dbb2643c9cf"
+git-tree-sha1 = "d1bf48bfcc554a3761a133fe3a9bb01488e06916"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.34.2"
+version = "0.33.21"
 
 [[deps.StatsFuns]]
 deps = ["HypergeometricFunctions", "IrrationalConstants", "LogExpFunctions", "Reexport", "Rmath", "SpecialFunctions"]

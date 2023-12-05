@@ -3,7 +3,10 @@
 
 Sample one BART model conditioned on predictors `X` and response `y`.
 """
-function sample_bart(X, y)
+function bart(X, y)
+end
+
+function barts(X, y, n)
 end
 
 """
@@ -11,5 +14,4 @@ end
 
 Sample one value from model `bart` at `x`.
 """
-function sample_value(bart, x)
-end
+predict_bart(bart, x) = bart(x)
