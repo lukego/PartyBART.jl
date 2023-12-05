@@ -26,28 +26,28 @@ variables(node::Branch) = [node.var; variables(node.left); variables(node.right)
 # Model with prior.
 
 # Fixed model paramters: default values.
-θdefault = (; α=0.95, β=2., κ=2, M=1, D=10)
+θdefault = (; α=0.95, β=2., σ=0.01, κ=2, M=1, D=10)
 
-@gen function tree(θ, t, Xs)
-    expr = {*} ~ node(θ, 0, nobounds)
+@gen function tree(θ, t, σ, Xs)
+    expr = {*} ~ node(θ, σ, 0, nobounds)
     for (i, x) in enumerate(Xs)
         μ = expr(x)
-        {:y=>t=>i} ~ cauchy(μ, 0.02)
+        {:y=>t=>i} ~ normal(μ, σ)
     end
     expr
 end
 
-@gen function node(θ, depth, bounds)
-    (;α,β,κ,M,D) = θ
+@gen function node(θ, σ, depth, bounds)
+    (;α,β,σ,κ,M,D) = θ
     if (split ~ bernoulli(α*(β^-depth)))
         var ~ uniform_discrete(1, D)
         (lo,hi) = get(bounds, var, (0.,1.))
         cut ~ uniform(lo, hi)
-        left  ~ node(θ, depth+1, dict(bounds, var=>(lo,cut)))
-        right ~ node(θ, depth+1, dict(bounds, var=>(cut,hi)))
+        left  ~ node(θ, σ, depth+1, dict(bounds, var=>(lo,cut)))
+        right ~ node(θ, σ, depth+1, dict(bounds, var=>(cut,hi)))
         return Branch(var, cut, left, right)
     else
-        val ~ cauchy(0, 1/M*κ)
+        val ~ normal(0, σ/M*κ)
         return Leaf(val)
     end
 end
@@ -61,19 +61,48 @@ end
 
 function infer_tree_state(X, y; θ=θdefault, λ=λdefault)
     (;n_particles,steps,n_mcmc) = λ
+    σ = 0.1
     # Observation values are fixed but Gen wants fresh addresses on each update.
     obs(t) = choicemap(map(i -> (:y=>t=>i, y[i]), eachindex(y))...)
-    state = pf_initialize(tree, (θ, 0, X), obs(0), n_particles)
+    state = pf_initialize(tree, (θ, 0, σ, X), obs(0), n_particles)
     for t in 1:steps
         pf_resize!(state, max(1, div(n_particles, t*5)))
         pf_rejuvenate!(state, mh, (CutSelection(),), n_mcmc*t)
         pf_rejuvenate!(state, mh, (LeafSelection(),), n_mcmc*t)
-        argsdiff = (NoChange, UnknownChange, NoChange)
-        args     = (θ,        t,             X)
+        argsdiff = (NoChange, UnknownChange, UnknownChange, NoChange)
+        args     = (θ,        t,             σ/t,           X)
         pf_update!(state, args, argsdiff, obs(t))
     end
     return state
 end
+
+function proposal(tr, depth)
+
+end
+
+function nsmc(X, y; θ, λ)
+    obs(t) = choicemap(map(i -> (:y=>t=>i, y[i]), eachindex(y))...)
+    state = pf_initialize(tree, (θ, 0, σ, X), obs(0), n_particles)
+    for depth in 1:5
+        pf_resample!(state)
+        pf_update!(state, args, argdiffs, observations,
+                   cut_depth_proposal, (depth,))
+    end
+end
+
+function cut(trace, depth)
+    constraints = get_selected(get_choices(trace), CutDepthSelection(depth))
+    (new_trace, w, _, discard) = update(tr, (), (), constraints)
+    new_trace
+end
+
+# Select choices up to a maximum choicemap-tree depth.
+struct CutDepthSelection <: Selection
+    depth::Int64
+end
+Base.isempty(::CutDepthSelection) = false
+Base.in(addr, ::CutDepthSelection) = true
+Base.getindex(cut::CutDepthSelection, addr) = cut.depth > 1 ? CutDepthSelection(cut.depth-1) : EmptySelection()
 
 # Recursive selection of all cuts.
 struct CutSelection <: Selection end
