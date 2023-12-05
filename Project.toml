@@ -1,0 +1,8 @@
+name = "PartyBART"
+uuid = "e3ce46e6-8952-45b1-8bb7-9e65ee217107"
+authors = ["Luke Gorrie <luke@nuddy.co>"]
+version = "0.1.0"
+
+[deps]
+Gen = "ea4f424c-a589-11e8-07c0-fd5c91b9da4a"
+GenParticleFilters = "56b76ac4-72ef-411e-b419-6d312ed86a6f"
